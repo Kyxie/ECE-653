@@ -14,7 +14,7 @@ where <USERID> is the student gitlab user id (usually the same as Quest user id)
 ```
 $ git clone https://git.uwaterloo.ca/stqam-1211/class/<USERID> stqam
 $ cd stqam
-$ git remote add upsteram https://git.uwaterloo.ca/stqam-1211/skeleton
+$ git remote add upstream https://git.uwaterloo.ca/stqam-1211/skeleton
 $ git fetch upstream
 $ git checkout -b master origin/master
 $ git merge upstream/master
