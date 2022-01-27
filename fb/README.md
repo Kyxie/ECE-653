@@ -4,6 +4,8 @@ In this special assignment, we will fuzz Doom - one of the most famous computer 
 
 __Fun fact 1__: Doom was originally compiled using WATCOM, a C compiler created by The University of Waterloo!
 
+__Video Tutorial__: <https://youtu.be/uvWi8RanG9s>
+
 ## Table of contents
 
 - [Doom](#doom)
