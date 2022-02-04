@@ -6,7 +6,7 @@ run FuzzDoom.
 To get a pre-build container from docker hub do:
 
 ```shell
-$ docker pull stqam/fuzz-doom
+$ docker pull uwstqam/fuzz-doom
 ```
 
 ## Building 
@@ -15,6 +15,6 @@ These instructions are only necessary if you want to build the container yoursel
 instead of using pre-build container from DockerHub.
 
 ```shell
-$ docker build  -t stqam/fuzz-domm -f docker/fuzz-doom.Dockerfile .
+$ docker build  -t uwstqam/fuzz-domm -f docker/fuzz-doom.Dockerfile .
 ```
 
