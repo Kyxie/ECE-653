@@ -1,5 +1,5 @@
 # taken from http://www.rosettacode.org/wiki/Tokenize_a_string_with_escaping
-def token_with_escape(inpt, escape="^", separator="|"):
+def token_with_escape_mutant2(inpt, escape="^", separator="|"):
     """
     Issue  python -m doctest thisfile.py  to run the doctests.
 
@@ -23,6 +23,3 @@ def token_with_escape(inpt, escape="^", separator="|"):
             state = 0
     result.append(token)
     return result
-
-def main(s):
-    return token_with_escape(s)

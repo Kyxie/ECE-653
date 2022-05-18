@@ -23,6 +23,3 @@ def token_with_escape(inpt, escape="^", separator="|"):
             state = 0
     result.append(token)
     return result
-
-def main(s):
-    return token_with_escape(s)

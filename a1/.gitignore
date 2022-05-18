@@ -1,2 +1,7 @@
 .coverage
+# ignore the virtual environment
+venv
+
+# misc
+.DS_Store
 

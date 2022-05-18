@@ -1,7 +1,8 @@
 import unittest
 
-from . import token_with_escape 
-
+from . import token_with_escape
+from .token_with_escape_mutant1 import token_with_escape_mutant1
+from .token_with_escape_mutant2 import token_with_escape_mutant2
 
 class CoverageTests(unittest.TestCase):
     def test_statement_coverage(self):
