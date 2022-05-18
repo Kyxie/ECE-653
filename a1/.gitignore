@@ -4,9 +4,3 @@ venv
 
 # misc
 .DS_Store
-
-# ignore the virtual environment
-venv
-
-# misc
-.DS_Store
