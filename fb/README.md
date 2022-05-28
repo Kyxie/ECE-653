@@ -45,14 +45,14 @@ We can also load multiple WAD files at the same time, so that people can create 
 ```
 chocolate-doom -iwad freedoom2.wad -file BATMAN.WAD
 ```
-__Fun fact 2__: John Carmark was looking for a name for the file extension. Upon asking "How do you call a file Where's All the Data?", his colleague Tom Hall responded: "A WAD"?
+__Fun fact 2__: John Carmack was looking for a name for the file extension. Upon asking "How do you call a file Where's All the Data?", his colleague Tom Hall responded: "A WAD"?
 ![Batman Doom](doc_imgs/batman_doom.jpeg)
 
 Most WAD files are archived over [here](https://www.doomworld.com/idgames/).
 
 __Fun fact 3__: While Doom source code is free, its assets are not. But since users can load any assets into it, free-to-use assets WADs based on Doom's original assets were created, and we are using one such WAD file in this assignment, called Freedoom. Doom's community loves word-play: Chocolate-Doom itself is a play on ... vanilla Doom. 
 ## What are we fuzzing?
-In this assignment, we will fuzz the wad reader (`chocolate-doom/src/w_wad.c`) and the map builder in Doom (`chocolate-doom/src/doom/p_setup.c`). In order to do so, we have created a minimal fuzzing target for you at fuzz_target.c, which is an adaptation of `chocolate-doom/src/doom/d_main.c` (the original main game loop). At a high level, the main loop is:
+In this assignment, we will fuzz the wad reader (`chocolate-doom/src/w_wad.c`) and the map builder in Doom (`chocolate-doom/src/doom/p_setup.c`). To do so, we have created a minimal fuzzing target for you at fuzz_target.c, which is an adaptation of `chocolate-doom/src/doom/d_main.c` (the original main game loop). At a high level, the main loop is:
 ```c
 //From Game Engine Black Book: Doom, by Fabien Sanglard
 void main(void){
@@ -68,10 +68,10 @@ void main(void){
     //only at this point, that we can init game-specific systems
     M_Init(); // Init menu
     R_Init(); // Init renderer
-    P_Init(); //Init Playloop state
-    S_Init(); //Init Sound
+    P_Init(); // Init Playloop state
+    S_Init(); // Init Sound
     
-    G_InitNew(); //Finally the game is setup here
+    G_InitNew(); // Finally the game is setup here
     
     D_DoomLoop(); // Start a never-return gameplay loop
 }
@@ -88,7 +88,7 @@ The fuzz target will get a random blob of data, turns it into a WAD file, and fe
 cd stqam
 # update from the skeleton 
 git fetch upstream
-git merge upstream/master
+git merge upstream/main
 # push to GitLab
 git push origin master
 ```
@@ -99,8 +99,8 @@ __You can do this assignment using Docker or your own local environment. If you 
 Here we provide instructions to build Chocolate-Doom and the provided target
 inside the provided Docker image. If you want to build the code in your own
 environment instead of inside Docker, feel free to do so. You may need to adapt
-the below cmake commands, for example, in the docker container `clang-10` is
-name of the C compiler that supports fuzzing. On my mac, the compiler is called
+the below cmake commands. For example, in the docker container, `clang-10` is
+the name of the C compiler that supports fuzzing. On my mac, the compiler is called
 `clang-mp-10`. The default version of clang that ships with XCode does not seem
 to work.
 
@@ -126,11 +126,11 @@ times to login multiple times (for example, in different terminals).
 ### Build Chocolate-Doom and the fuzzing target
 To build Chocolate-Doom and the provided fuzzing target, do
 ```bash
-git clone https://git.uwaterloo.ca/stqam-1221/class/USER.git stqam
+git clone https://git.uwaterloo.ca/stqam-1225/class/USER.git stqam
 # this will create a new directory `fb` for fuzz battle
 cd stqam/fb
 # checkout our version of chocolate-doom
-git clone https://git.uwaterloo.ca/stqam-1221/chocolate-doom.git
+git clone https://git.uwaterloo.ca/stqam-1225/chocolate-doom.git
 mkdir build ; cd build
 cmake -DCMAKE_C_COMPILER=clang-10 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
       -DCMAKE_C_FLAGS='-fsanitize=fuzzer-no-link,address -fprofile-instr-generate -fcoverage-mapping -g -ggdb3 -O2' \
@@ -140,14 +140,14 @@ ninja
 
 The above command compiles everything using [Ninja](https://ninja-build.org/).
 You can use `make` instead if you prefer. `CMAKE_C_FLAGS` has the options to
-enabled fuzzing, AddressSanitizer, and coverage. You should not need to change
+enable fuzzing, AddressSanitizer, and coverage. You should not need to change
 them. However, you may want to try enabling additional sanitizers, or disable
 AddressSanitizer.
  
 We are using our own version of Chocolate Doom that has been improved for
 fuzzing. To see what we have changed, look at the commit [history].
 
-[history]: https://git.uwaterloo.ca/stqam-1221/chocolate-doom/-/commits/fuzz/
+[history]: https://git.uwaterloo.ca/stqam-1225/chocolate-doom/-/commits/fuzz/
 
 To run the fuzz target, in the `build` directory, run
 ```bash
@@ -224,7 +224,7 @@ Our main fuzzing targets in this assignment are `chocolate-doom/src/w_wad.c` and
 `chocolate-doom/src/doom/p_setup.c`, and your grade will be based on the line
 coverage of those functions
 
-__Grade scale__: Outstanding (95%), Excellent (89%), Very Good (75%), Satisfactory (%65), Unsatisfactory (38%)
+__Grade scale__: Outstanding (95%), Excellent (89%), Very Good (75%), Satisfactory (65%), Unsatisfactory (38%)
 
 __Unsatisfactory__
 : You get nothing to work, but you write what you have done in the report.
@@ -248,16 +248,16 @@ __Outstanding__
 ![live_coverage](doc_imgs/Screenshot_from_2021-02-11_21-32-02.png)
 
 __1% bonus__
-: Compile DooM on your local machine, load a WAD file in it and play the game!
+: Compile Doom on your local machine, load a WAD file in it and play the game!
   Take a screenshot and you get 1% bonus. (Your TA knows how to do reverse image
   search so please don't just take a photo from Google. The goal is for you to
   have fun.)
   
 __EXTRA BONUS__: Extra bonus points will be given for discovering interesting
-bugs, achieving significant over what is required, improving code for better (or
+bugs, achieving significantly more than what is required, improving code for better (or
 faster) fuzzing. Tell us in your report if you believe you deserve the EXTRA
 BONUS. Exact details of the EXTRA BONUS will be released after grading. This is
-the second time that we have the Fuzz Battle, so this is as new to us as it is to
+the third time that we have the Fuzz Battle (first for me -PL), so this is as new to us as it is to
 you.
 
 ## I get the files to compile. Now what?
@@ -269,7 +269,7 @@ You can also create multiple fuzz targets, each one targeting a different part o
 ## What files can I change?
 You cannot change the `chocolate-doom/src/doom/p_setup.c` and `chocolate-doom/src/w_wad.c`
 
-Other than that, feel free to change anything, but be reasonable (remove all the unused files to boost your total line coverage is not nice!).
+Other than that, feel free to change anything, but be reasonable (removing all the unused files to boost your total line coverage is not nice!).
 
 ## What do I submit?
 You are required to submit:
@@ -322,7 +322,7 @@ In your skeleton folder, the files you submit for this assignment should be plac
 ### Make your life with Docker easier
 __Please try to use volume mapping with Docker__
 
-If you cant, the following tricks may make your life easier 
+If you can't, the following tricks may make your life easier 
 - Moving files into the Docker container, e.g copy a script into the container:
 ```
 docker cp run-fuzzing.sh FuzzDoom:/home/doom/fb
