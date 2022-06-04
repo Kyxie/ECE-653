@@ -13,7 +13,8 @@ def token_with_escape_mutant2(inpt, escape="^", separator="|"):
         if state == 0:
             if c == escape:
                 state = 1
-            elif c == separator:
+            elif c != separator:
+                # Change to '!=' instead of '=='
                 result.append(token)
                 token = ""
             else:
