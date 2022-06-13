@@ -325,12 +325,12 @@ __Please try to use volume mapping with Docker__
 If you can't, the following tricks may make your life easier 
 - Moving files into the Docker container, e.g copy a script into the container:
 ```
-docker cp run-fuzzing.sh FuzzDoom:/home/doom/stqam/fb
+docker cp run-fuzzing.sh FuzzDoom:/home/doom/fb
 ```
 
 - Moving files out of the Docker container, e.g copy the html report out of docker so you can open it in browser:
 ```
-docker cp FuzzDoom:/home/doom/stqam/fb/html_output docker_html_out
+docker cp FuzzDoom:/home/doom/fb/html_output docker_html_out
 ```
 - Using VSCode to directly edit/browse files inside the container:
 [Attach to a running container](https://code.visualstudio.com/docs/remote/attach-container)
