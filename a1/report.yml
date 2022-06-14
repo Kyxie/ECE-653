@@ -2,7 +2,7 @@ ghub: ''
 url: ist-git@git.uwaterloo.ca:stqam-1221/class/k47xie
 id: 20958936
 watiam: k47xie
-total_marks: 36.75
+total_marks: 42.75
 1a:
   mark: 2
   comments: |
@@ -22,7 +22,7 @@ total_marks: 36.75
 1e:
   mark: 1.75
   comments: |
-    l12 -> l15 and  l14 -> l12;
+    l12 -> l15;
 2a:
   mark: 3
   comments: |
@@ -72,5 +72,9 @@ total_marks: 36.75
   mark: 0
   comments: |
     Marking automated
-stats_visitor_tests: 26/26
-undef_visitor_tests: 0/10
+stats_visitor_tests:
+- value
+- 26/26
+undef_visitor_tests:
+- value
+- 0/10
