@@ -57,7 +57,7 @@ class SymState(object):
         res = self._solver.check()
         return res == z3.unsat
 
-    def pick_concerete(self):
+    def pick_concrete(self):
         """Pick a concrete state consistent with the symbolic state.
            Return None if no such state exists"""
         res = self._solver.check()
