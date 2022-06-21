@@ -4,7 +4,7 @@ student: 20958936
 watiam: k47xie
 late:
   count: 0
-total_marks: 49.5
+total_marks: 58.0
 1a:
   mark: 2
   comments: |
@@ -42,13 +42,13 @@ total_marks: 49.5
   comments: |
     not complete, should prove both two cases for each part
 3b:
-  mark: 0
+  mark: 6
   comments: |
     none
 3c:
-  mark: 0
+  mark: 2.5
   comments: |
-    none
+    expected program behaviour
 3a:
   mark: 6.0
   comments: |
@@ -74,9 +74,5 @@ total_marks: 49.5
   mark: 0
   comments: |
     Marking automated
-stats_visitor_tests:
-- value
-- 26/26
-undef_visitor_tests:
-- value
-- 0/10
+stats_visitor_tests: 26/26
+undef_visitor_tests: 0/10
