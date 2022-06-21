@@ -4,7 +4,7 @@ student: 20958936
 watiam: k47xie
 late:
   count: 0
-total_marks: 43.5
+total_marks: 49.5
 1a:
   mark: 2
   comments: |
@@ -74,5 +74,9 @@ total_marks: 43.5
   mark: 0
   comments: |
     Marking automated
-stats_visitor_tests: 26/26
-undef_visitor_tests: 0/10
+stats_visitor_tests:
+- value
+- 26/26
+undef_visitor_tests:
+- value
+- 0/10
