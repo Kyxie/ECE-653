@@ -21,11 +21,11 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import sys
-
-import io 
+import io
 import z3
 
 from . import ast, int
+from functools import reduce
 
 
 class SymState(object):
@@ -103,9 +103,7 @@ class SymExec(ast.AstVisitor):
         pass
 
     def run(self, ast, state):
-        # set things up and
-        # call self.visit (ast, state=state)
-        pass
+        return self.visit(ast, state=state)
 
     def visit_IntVar(self, node, *args, **kwargs):
         return kwargs['state'].env[node.name]
@@ -117,41 +115,134 @@ class SymExec(ast.AstVisitor):
         return z3.IntVal(node.val)
 
     def visit_RelExp(self, node, *args, **kwargs):
-        pass
+        lhs = self.visit(node.arg(0), *args, **kwargs)
+        rhs = self.visit(node.arg(1), *args, **kwargs)
+        if node.op == '<=':
+            return lhs <= rhs
+        if node.op == '<':
+            return lhs < rhs
+        if node.op == '=':
+            return lhs == rhs
+        if node.op == '>=':
+            return lhs >= rhs
+        if node.op == '>':
+            return lhs > rhs
+        assert False
 
     def visit_BExp(self, node, *args, **kwargs):
-        pass
+        kids = [self.visit(a, *args, **kwargs) for a in node.args]
+        if node.op == 'not':
+            assert node.is_unary()
+            assert len(kids) == 1
+            return z3.Not(kids[0])
+        fn = None
+        base = None
+        if node.op == 'and':
+            def fn(x, y): return z3.And(x, y)
+            base = z3.BoolVal(True)
+        elif node.op == 'or':
+            def fn(x, y): return z3.Or(x, y)
+            base = z3.BoolVal(False)
+        assert fn is not None
+        return reduce(fn, kids, base)
 
     def visit_AExp(self, node, *args, **kwargs):
-        pass
+        kids = [self.visit(a, *args, **kwargs) for a in node.args]
+        fn = None
+        if node.op == '+':
+            def fn(x, y): return x + y
+        elif node.op == '-':
+            def fn(x, y): return x - y
+        elif node.op == '*':
+            def fn(x, y): return x * y
+        elif node.op == '/':
+            def fn(x, y): return x / y
+        assert fn is not None
+        return reduce(fn, kids)
 
     def visit_SkipStmt(self, node, *args, **kwargs):
-        pass
+        return [kwargs['state']]
 
     def visit_PrintStateStmt(self, node, *args, **kwargs):
-        pass
+        return [kwargs['state']]
 
     def visit_AsgnStmt(self, node, *args, **kwargs):
-        pass
+        st = kwargs["state"]
+        if node.lhs.name not in st.env.keys():
+            st.env[node.lhs.name] = z3.FreshInt(node.lhs.name)
+        st.env[node.lhs.name] = self.visit(node.rhs, *args, **kwargs)
+        return [st]
 
     def visit_IfStmt(self, node, *args, **kwargs):
-        pass
+        cond = self.visit(node.cond, *args, **kwargs)
+        st = []
+        ifs = kwargs["state"].fork()
+        conds = ifs[0]
+        nots = ifs[1]
+        conds.add_pc(cond)
+        nots.add_pc(z3.Not(cond))
+        if not conds.is_empty():
+            thens = self.visit(node.then_stmt, state=conds)
+            st.extend(thens)
+        if not nots.is_empty():
+            if node.has_else():
+                elses = self.visit(node.else_stmt, state=nots)
+                st.extend(elses)
+            else:
+                st.append(nots)
+        return st
 
     def visit_WhileStmt(self, node, *args, **kwargs):
-        pass
+        whiles = [kwargs['state']]
+        done = []
+        for time in range(0, 11):
+            news = []
+            for st in whiles:
+                cond = self.visit(node.cond, state=st)
+                forks = st.fork()
+                conds = forks[0]
+                nots = forks[1]
+                conds.add_pc(cond)
+                nots.add_pc(z3.Not(cond))
+                if not conds.is_empty():
+                    news.extend(self.visit(node.body, state=conds))
+                if not nots.is_empty():
+                    done.append(nots)
+            whiles = news
+        return done
 
     def visit_AssertStmt(self, node, *args, **kwargs):
-        # Don't forget to print an error message if an assertion might be violated
-        pass
+        cond = self.visit(node.cond, * args, ** kwargs)
+        st = kwargs['state'].fork()
+        st[0].add_pc(z3.Not(cond))
+        if not st[0].is_empty():
+            print("Assertion Error")
+            st[0].mk_error()
+        st[1].add_pc(cond)
+        if st[1].is_empty():
+            return []
+        else:
+            return [st[1]]
 
     def visit_AssumeStmt(self, node, *args, **kwargs):
-        pass
+        st = kwargs['state']
+        st.add_pc(self.visit(node.cond, *args, **kwargs))
+        return [st] if not st.is_empty() else []
 
     def visit_HavocStmt(self, node, *args, **kwargs):
-        pass
+        st = kwargs['state']
+        for v in node.vars:
+            st.env[v.name] = z3.FreshInt(v.name)
+        return [st]
 
     def visit_StmtList(self, node, *args, **kwargs):
-        pass
+        sts = [kwargs['state']]
+        for stmt in node.stmts:
+            updatess = []
+            for st in sts:
+                updatess.extend(self.visit(stmt, state=st))
+            sts = updatess
+        return sts
 
 
 def _parse_args():
