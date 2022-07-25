@@ -32,7 +32,15 @@ method partition(a:array<int>, l:nat, u:nat) returns (pivot:int)
   var i:int := l - 1;
   var j := l;
   while (j < u)
-    // MISSING INVARIANT
+    decreases u-j;
+    invariant pv == a[u];
+    invariant l-1 <= i < j <= u;
+    invariant forall p :: l <= p <= i ==> a[p] <= pv;
+    invariant forall p :: i < p < j ==> a[p] > pv;
+    invariant l > 0 ==> beq(old(a[..]), a[..], 0, l-1);
+    invariant l > 0 ==> partitioned(a, 0, l-1, l, u);
+    invariant u < a.Length-1 ==> beq(old(a[..]), a[..], u+1, a.Length - 1);
+    invariant u < a.Length - 1 ==> partitioned(a, l, u, u+1, a.Length-1);
   {
     if (a[j] <= pv)
     {
