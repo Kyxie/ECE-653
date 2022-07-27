@@ -3,7 +3,7 @@ include "preds.dfy"
 method choose(l:nat, u:nat) returns (rv: nat)
   requires l <= u;
   ensures l <= rv <= u;
-{assume(l <= rv <= u);}
+{assume(rv := l + (u - l) / 2);}
 
 method partition(a:array<int>, l:nat, u:nat) returns (pivot:int)
   modifies a;
